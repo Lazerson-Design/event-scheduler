@@ -1,6 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpPage() {
+  // Adding useState to manage form data (email, password, confirm password)
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "", // Adding confirm password for additional logic
+  });
+
+  // useNavigate hook to programmatically navigate after successful sign-up
+  const navigate = useNavigate();
+
+  // Handle input changes for all form fields
+  const handleChange = (e) =>
+    setFormData((prev) => ({
+      ...prev, // Preserve previous state
+      [e.target.name]: e.target.value, // Update the state for the field that changed
+    }));
+
+  // Handle form submission to sign up the user
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form from refreshing the page
+
+    // Check if password and confirm password match
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!"); // Show an alert if they don't match
+      return; // Prevent form submission if passwords don't match
+    }
+
+    // Log the form data before making the API call
+    console.log("Form Data:", formData);
+
+    try {
+      // API call to sign up the user
+      const res = await fetch(import.meta.env.VITE_API_URL + "/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Sending JSON data
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      /* ERROR MESSAGES */
+      if (res.status === 409) {
+        // Handle user already exists error
+        alert("User with this email already exists.");
+        return;
+      }
+
+      if (!res.ok) {
+        // Handle other errors
+        throw new Error("Something went wrong!");
+      }
+
+      const data = await res.json();
+      console.log(data);
+
+      // Navigate to login page after successful sign-up
+      navigate("/signin");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="container mx-auto">
       {/* Button to open the Sign Up modal */}
@@ -16,26 +82,8 @@ export default function SignUpPage() {
         <div className="modal-box">
           <h3 className="font-bold text-lg">Sign Up</h3>
 
-          {/* Form to handle user sign up */}
-          <form method="dialog">
-            {/* Username Input */}
-            <label className="input input-bordered flex items-center gap-2 mt-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70"
-              >
-                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-              </svg>
-              <input
-                type="text"
-                className="grow"
-                placeholder="Username"
-                required
-              />
-            </label>
-
+          {/* Updated form to handle form submission and controlled inputs */}
+          <form onSubmit={handleSubmit}>
             {/* Email Input */}
             <label className="input input-bordered flex items-center gap-2 mt-4">
               <svg
@@ -51,6 +99,9 @@ export default function SignUpPage() {
                 type="email"
                 className="grow"
                 placeholder="Email"
+                name="email" // Name attribute for state binding
+                value={formData.email} // Bind to formData.email
+                onChange={handleChange} // Update state on input change
                 required
               />
             </label>
@@ -73,6 +124,9 @@ export default function SignUpPage() {
                 type="password"
                 className="grow"
                 placeholder="Password"
+                name="password" // Name attribute for state binding
+                value={formData.password} // Bind to formData.password
+                onChange={handleChange} // Update state on input change
                 required
               />
             </label>
@@ -87,7 +141,7 @@ export default function SignUpPage() {
               >
                 <path
                   fillRule="evenodd"
-                  d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                  d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 1 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
                   clipRule="evenodd"
                 />
               </svg>
@@ -95,6 +149,9 @@ export default function SignUpPage() {
                 type="password"
                 className="grow"
                 placeholder="Confirm Password"
+                name="confirmPassword" // Name attribute for state binding
+                value={formData.confirmPassword} // Bind to formData.confirmPassword
+                onChange={handleChange} // Update state on input change
                 required
               />
             </label>
@@ -104,7 +161,11 @@ export default function SignUpPage() {
               <div>
                 {/* Link to Sign In for users who already have an account */}
                 <p className="inline mr-2">Already have an account?</p>
-                <button type="button" className="btn btn-active btn-neutral">
+                <button
+                  type="button"
+                  className="btn btn-active btn-neutral"
+                  onClick={() => navigate("/signin")} // Use navigate to redirect to the Sign In page
+                >
                   Sign In
                 </button>
               </div>
