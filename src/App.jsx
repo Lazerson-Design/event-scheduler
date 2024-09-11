@@ -6,6 +6,8 @@ import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import CreateEventPage from "./pages/CreateEventPage";
 
+
+
 function App() {
   return (
     <AuthProvider>
