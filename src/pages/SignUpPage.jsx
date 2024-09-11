@@ -1,12 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext"; // Import AuthContext
 
 export default function SignUpPage() {
+  useEffect(() => {
+    const modalElement = document.getElementById("sign_up_modal");
+    if (modalElement) {
+      modalElement.showModal();
+    }
+  }, []); // This ensures the modal opens automatically when the component mounts
+
+  const handleCloseModal = () => {
+    const modal = document.getElementById("modal-container");
+    if (modal) {
+      modal.close(); // Close the modal using the dialog API
+    }
+  };
+
+  // Access the onLoginSuccess from AuthContext
+  const { onLoginSuccess } = useContext(AuthContext); // Use context for login success
+
   // Adding useState to manage form data (email, password, confirm password)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    confirmPassword: "", // Adding confirm password for additional logic
+    confirmPassword: "", // Adding confirm password for validation logic
   });
 
   // useNavigate hook to programmatically navigate after successful sign-up
@@ -18,6 +36,15 @@ export default function SignUpPage() {
       ...prev, // Preserve previous state
       [e.target.name]: e.target.value, // Update the state for the field that changed
     }));
+
+  // Clear form data after successful sign-up
+  const clearForm = () => {
+    setFormData({
+      email: "",
+      password: "",
+      confirmPassword: "", // Reset confirmPassword
+    });
+  };
 
   // Handle form submission to sign up the user
   const handleSubmit = async (e) => {
@@ -60,6 +87,9 @@ export default function SignUpPage() {
       const data = await res.json();
       console.log(data);
 
+      // Clear form after successful sign-up
+      clearForm();
+
       // Navigate to login page after successful sign-up
       navigate("/signin");
     } catch (error) {
@@ -69,14 +99,6 @@ export default function SignUpPage() {
 
   return (
     <div className="container mx-auto">
-      {/* Button to open the Sign Up modal */}
-      <button
-        className="btn"
-        onClick={() => document.getElementById("sign_up_modal").showModal()}
-      >
-        Open Sign Up Modal
-      </button>
-
       {/* Sign Up Modal */}
       <dialog id="sign_up_modal" className="modal">
         <div className="modal-box">
@@ -116,7 +138,7 @@ export default function SignUpPage() {
               >
                 <path
                   fillRule="evenodd"
-                  d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                  d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 1 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
                   clipRule="evenodd"
                 />
               </svg>
@@ -164,13 +186,22 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   className="btn btn-active btn-neutral"
-                  onClick={() => navigate("/signin")} // Use navigate to redirect to the Sign In page
+                  onClick={() => {
+                    handleCloseModal(); // Close this modal
+                    navigate("/signin"); // Navigate to Sign-In
+                  }} // Use navigate to redirect to the Sign In page
                 >
                   Sign In
                 </button>
               </div>
               {/* Sign Up Button to submit the form */}
-              <button type="submit" className="btn btn-success">
+              <button
+                type="submit"
+                className="btn btn-success"
+                onClick={() => {
+                  handleCloseModal();
+                }}
+              >
                 Sign Up!
               </button>
             </div>
