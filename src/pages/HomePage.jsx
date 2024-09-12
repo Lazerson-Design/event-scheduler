@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import SignUpPage from "./SignUpPage";
 import SignInPage from "./SignInPage";
-import { AuthContext } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
+import { AuthContext } from "../context/AuthContext";
 
 export default function HomePage() {
   const { isLoggedIn, onLogout } = useContext(AuthContext);
@@ -25,7 +25,6 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto">
-      <Navbar/>
       {/* Conditionally render content based on the user's login status */}
       {!isLoggedIn ? (
         // If not logged in, prompt the user to log in or sign up
@@ -37,9 +36,8 @@ export default function HomePage() {
       ) : (
         // If logged in, show the homepage content and a log-out button
         <div>
+          <Navbar />
           <h1>Welcome to the HomePage!</h1>
-          {/* Log out button to reset the login state */}
-          <button onClick={() => onLogout()}>Log Out</button>
         </div>
       )}
     </div>

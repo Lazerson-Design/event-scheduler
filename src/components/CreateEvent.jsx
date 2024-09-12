@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Navbar from "../components/Navbar";
 
 const CreateEvent = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const CreateEvent = () => {
           },
           body: JSON.stringify({
             ...formData,
-            organizerId: 4,
+            organizerId:user.id,
           }),
         });
 

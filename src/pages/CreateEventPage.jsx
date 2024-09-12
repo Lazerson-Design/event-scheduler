@@ -1,7 +1,11 @@
 // placeholder
 import CreateEvent from "../components/CreateEvent";
+import Navbar from "../components/Navbar";
 export default function CreateEventPage() {
-  return <div className="container mx-auto">Create Event
-  <CreateEvent/>
-  </div>;
+  return (
+    <div>
+      <Navbar/>
+      <CreateEvent />
+    </div>
+  );
 }
