@@ -29,7 +29,10 @@ export const EventProvider = ({ children }) => {
       }
 
       const data = await res.json();
-      setEvents((prevEvents) => [...prevEvents, data]);
+      // Ensure prevEvents is an array before updating it
+      setEvents((prevEvents) =>
+        Array.isArray(prevEvents) ? [...prevEvents, data] : [data]
+      );
     } catch (error) {
       console.error("API request error:", error);
     }
@@ -45,7 +48,9 @@ export const EventProvider = ({ children }) => {
           },
         });
         const data = await res.json();
-        setEvents(data);
+
+        // Ensure data is an array, or fallback to an empty array
+        setEvents(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching events:", error);
       }
