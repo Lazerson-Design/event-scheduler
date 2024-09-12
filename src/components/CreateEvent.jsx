@@ -6,27 +6,18 @@ const CreateEvent = () => {
     title: "",
     date: "",
     location: "",
-    imageUrl: "",
+    // imageUrl: "",
     description: "",
   });
 
   const [events, setEvents] = useState([]);
+  const [submitForm, setSubmitForm] = useState(false);
 
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    if (!token) {
-      console.error("Token is not available. User is not logged in.");
-      return;
-    }
-
-    const fetchEvents = async () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) {
-        console.error("User is not logged in");
-        return;
-      }
-
+    const createEvent = async () => {
       try {
         const res = await fetch("http://localhost:3001/api/events", {
           method: "POST",
@@ -34,170 +25,160 @@ const CreateEvent = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ ...formData, organizerId: user.id }),
+          body: JSON.stringify({
+            ...formData,
+            organizerId:user.id,
+          }),
         });
+
+        if (!res.ok) {
+          throw new Error(
+            `Fehler beim Erstellen des Events: ${res.statusText}`
+          );
+        }
 
         const data = await res.json();
         setEvents((prevEvents) => [...prevEvents, data]);
+
         setFormData({
           title: "",
           date: "",
           location: "",
-          imageUrl: "",
+          // imageUrl: "",
           description: "",
         });
       } catch (error) {
-        console.error(error);
+        console.error("Fehler bei der API-Anfrage:", error);
       }
     };
 
-    if (formData.title || formData.date || formData.location) {
-      fetchEvents();
+    if (submitForm) {
+      createEvent();
+      setSubmitForm(false);
     }
-  }, [formData, token]);
+  }, [submitForm, formData, token, user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormData({ ...formData });
+    setSubmitForm(true);
   };
 
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   return (
-    <div>
-      {" "}
-      <Navbar />
-      <div className="flex items-center justify-center min-h-screen">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
-          style={{ width: "100%", maxWidth: "400px" }}
-        >
-          <h2 className="text-2xl font-bold mb-4 text-center text-white">
-            Create Event
-          </h2>
+    <div className="flex items-center justify-center min-h-screen flex-col">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        style={{ width: "100%", maxWidth: "400px" }}
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center text-white">
+          Create Event
+        </h2>
 
-          {/*  Name */}
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-bold mb-2"
-              htmlFor="title"
-            >
-              Event Name:
-            </label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="input input-bordered input-accent w-full max-w-xs"
-              placeholder="Enter event name"
-            />
-          </div>
+        {/* Event Name */}
+        <div className="mb-4">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="title"
+          >
+            Event Name:
+          </label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="input input-bordered input-accent w-full max-w-xs"
+            placeholder="Enter event name"
+          />
+        </div>
 
-          {/*  Date */}
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-bold mb-2"
-              htmlFor="date"
-            >
-              Event Date:
-            </label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="input input-bordered input-accent w-full max-w-xs"
-            />
-          </div>
+        {/* Event Date */}
+        <div className="mb-4">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="date"
+          >
+            Event Date:
+          </label>
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            className="input input-bordered input-accent w-full max-w-xs"
+          />
+        </div>
 
-          {/* Location */}
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-bold mb-2"
-              htmlFor="location"
-            >
-              Event Location:
-            </label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="input input-bordered input-accent w-full max-w-xs"
-              placeholder="Enter event location"
-            />
-          </div>
+        {/* Event Location */}
+        <div className="mb-4">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="location"
+          >
+            Event Location:
+          </label>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            className="input input-bordered input-accent w-full max-w-xs"
+            placeholder="Enter event location"
+          />
+        </div>
 
-          {/*  URL */}
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-bold mb-2"
-              htmlFor="imageUrl"
-            >
-              Image URL:
-            </label>
-            <input
-              type="text"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              className="input input-bordered input-accent w-full max-w-xs"
-              placeholder="Enter image URL"
-            />
-          </div>
+        <div className="mb-4">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="description"
+          >
+            Description:
+          </label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="input input-bordered input-accent w-full max-w-xs"
+            placeholder="Enter event description"
+          />
+        </div>
 
-          {/* Description */}
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-bold mb-2"
-              htmlFor="description"
-            >
-              Description:
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="input input-bordered input-accent w-full max-w-xs"
-              placeholder="Enter event description"
-            />
-          </div>
+        <button type="submit" className="w-full btn btn-success">
+          Submit
+        </button>
+      </form>
 
-          <button type="submit" className="w-full btn btn-success">
-            Submit
-          </button>
-        </form>
+      {/* Event List */}
+      
+      {events.length > 0 && (
 
-        {/* Event List */}
-        {events.length > 0 && (
-          <div className="mt-8 w-full max-w-md">
-            <h3 className="text-xl font-bold mb-4 text-center text-white">
-              Created Events
-            </h3>
-            {events.map((event, index) => (
-              <div key={index} className="card bg-base-100 w-96 shadow-xl mb-4">
-                <div className="card-body">
-                  <h2 className="card-title">{event.title}</h2>
-                  <p>{event.description}</p>
-                </div>
-                {event.imageUrl && (
-                  <figure>
-                    <img
-                      src={event.imageUrl}
-                      alt={event.title}
-                      className="max-w-full"
-                    />
-                  </figure>
-                )}
+        <div className=" bg-gray-800 mt-8 w-full max-w-md" style={{ width: "100%", maxWidth: "400px" }}>
+          <h3 className="text-xl font-bold mb-4 text-center text-white">
+            Created Events
+          </h3>
+          {events.map((event, index) => (
+            <div key={index} className="card bg-base-100 w-96 shadow-xl mb-4 m-auto">
+              <div className="card-body">
+                <h2 className="card-title text-gray-50">{event.title}</h2>
+                <p className="text-gray-50">{event.description}</p>
               </div>
-            ))}
-          </div>
-        )}
+              {event.imageUrl && (
+                <figure>
+                  <img
+                    src={event.imageUrl}
+                    alt={event.title}
+                    className="max-w-full"
+                    />
+                </figure>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
       </div>
-    </div>
   );
 };
 
