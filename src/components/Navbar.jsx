@@ -1,32 +1,63 @@
 import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { onLogout } = useContext(AuthContext);
+
   return (
-    <div className="navbar bg-slate-300 flex-wrap">
+    <div className="navbar bg-base-100">
+      {/* Navbar title linking to the homepage */}
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Event-Scheduler</a>
+        <NavLink to="/" className="btn btn-ghost text-xl">
+          Event-Scheduler
+        </NavLink>
       </div>
-      <div className="flex-none ">
-        <ul className="menu menu-horizontal px-1 gap-5 font-bold mr-10">
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/addEvent">Add Event</NavLink>
-          </li>
+
+      <div className="flex-none">
+        {/* Create Event Button */}
+        <NavLink to="/create-event" className="btn btn-success mx-4">
+          Add Event
+        </NavLink>
+
+        {/* Dropdown for user profile options */}
+        <div className="dropdown dropdown-end">
+          {/* Avatar button that triggers the profile dropdown */}
           <div
             tabIndex={0}
             role="button"
             className="btn btn-ghost btn-circle avatar"
           >
+            {/* Displaying the user avatar */}
             <div className="w-10 rounded-full">
               <img
-                alt="Tailwind CSS Navbar component"
-                src="https://imgs.search.brave.com/twkipH7hdreu1BLGIZl4bXwBFPxGBtbLmKzy8xeplVI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTMw/MzI3NDI3NS92ZWN0/b3IvZC1zdHlsZS1s/b2dvLWljb24tc2hh/cGUuanBnP3M9NjEy/eDYxMiZ3PTAmaz0y/MCZjPVEweTNURERC/cnJGQndSQ2R6VGdf/T1hMaGhwUGdoMFIt/YzctLVZqYmJTSnM9"
+                alt="User avatar"
+                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
               />
             </div>
           </div>
-        </ul>
+          {/* Dropdown content with user options */}
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+          >
+            {/* Profile link with a badge */}
+            <li>
+              <a className="justify-between">
+                Profile
+                <span className="badge">New</span>
+              </a>
+            </li>
+            {/* Settings link */}
+            <li>
+              <a>Settings</a>
+            </li>
+            {/* Logout link */}
+            <li>
+              <a onClick={onLogout}>Logout</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

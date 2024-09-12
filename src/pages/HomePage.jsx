@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import SignUpPage from "./SignUpPage";
 import SignInPage from "./SignInPage";
+import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
 
 export default function HomePage() {
@@ -35,9 +36,8 @@ export default function HomePage() {
       ) : (
         // If logged in, show the homepage content and a log-out button
         <div>
+          <Navbar />
           <h1>Welcome to the HomePage!</h1>
-          {/* Log out button to reset the login state */}
-          <button onClick={() => onLogout()}>Log Out</button>
         </div>
       )}
     </div>
