@@ -27,7 +27,7 @@ const CreateEvent = () => {
           },
           body: JSON.stringify({
             ...formData,
-            organizerId:user.id,
+            organizerId: 5 /*HIER LOGIK FÜR USER ID AUS LOCAL STORRAGE */,
           }),
         });
 
@@ -152,15 +152,20 @@ const CreateEvent = () => {
       </form>
 
       {/* Event List */}
-      
-      {events.length > 0 && (
 
-        <div className=" bg-gray-800 mt-8 w-full max-w-md" style={{ width: "100%", maxWidth: "400px" }}>
+      {events.length > 0 && (
+        <div
+          className=" bg-gray-800 mt-8 w-full max-w-md"
+          style={{ width: "100%", maxWidth: "400px" }}
+        >
           <h3 className="text-xl font-bold mb-4 text-center text-white">
             Created Events
           </h3>
           {events.map((event, index) => (
-            <div key={index} className="card bg-base-100 w-96 shadow-xl mb-4 m-auto">
+            <div
+              key={index}
+              className="card bg-base-100 w-96 shadow-xl mb-4 m-auto"
+            >
               <div className="card-body">
                 <h2 className="card-title text-gray-50">{event.title}</h2>
                 <p className="text-gray-50">{event.description}</p>
@@ -171,14 +176,14 @@ const CreateEvent = () => {
                     src={event.imageUrl}
                     alt={event.title}
                     className="max-w-full"
-                    />
+                  />
                 </figure>
               )}
             </div>
           ))}
         </div>
       )}
-      </div>
+    </div>
   );
 };
 
