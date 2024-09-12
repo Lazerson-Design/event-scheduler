@@ -5,29 +5,18 @@ const CreateEvent = () => {
     title: "",
     date: "",
     location: "",
-    imageUrl: "", 
-    description: "", 
+    // imageUrl: "",
+    description: "",
   });
 
   const [events, setEvents] = useState([]);
+  const [submitForm, setSubmitForm] = useState(false);
 
-  
-  const token = localStorage.getItem('authToken');
-
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    if (!token) {
-      console.error("Token is not available. User is not logged in.");
-      return;
-    }
-
-    const fetchEvents = async () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) {
-        console.error("User is not logged in");
-        return;
-      }
-
+    const createEvent = async () => {
       try {
         const res = await fetch("http://localhost:3001/api/events", {
           method: "POST",
@@ -35,43 +24,64 @@ const CreateEvent = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ ...formData, organizerId: user.id }),
+          body: JSON.stringify({
+            ...formData,
+            organizerId: 4,
+          }),
         });
+
+        if (!res.ok) {
+          throw new Error(
+            `Fehler beim Erstellen des Events: ${res.statusText}`
+          );
+        }
 
         const data = await res.json();
         setEvents((prevEvents) => [...prevEvents, data]);
-        setFormData({ title: "", date: "", location: "", imageUrl: "", description: "" });
+
+        setFormData({
+          title: "",
+          date: "",
+          location: "",
+          // imageUrl: "",
+          description: "",
+        });
       } catch (error) {
-        console.error(error);
+        console.error("Fehler bei der API-Anfrage:", error);
       }
     };
 
-   
-    if (formData.title || formData.date || formData.location) {
-      fetchEvents();
+    if (submitForm) {
+      createEvent();
+      setSubmitForm(false);
     }
-  }, [formData, token]);
+  }, [submitForm, formData, token, user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormData({ ...formData }); 
+    setSubmitForm(true);
   };
 
   const handleChange = (e) =>
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen flex-col">
       <form
         onSubmit={handleSubmit}
         className="bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        style={{ width: '100%', maxWidth: '400px' }}
+        style={{ width: "100%", maxWidth: "400px" }}
       >
-        <h2 className="text-2xl font-bold mb-4 text-center text-white">Create Event</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-white">
+          Create Event
+        </h2>
 
-        {/*  Name */}
+        {/* Event Name */}
         <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="title">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="title"
+          >
             Event Name:
           </label>
           <input
@@ -84,9 +94,12 @@ const CreateEvent = () => {
           />
         </div>
 
-        {/*  Date */}
+        {/* Event Date */}
         <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="date">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="date"
+          >
             Event Date:
           </label>
           <input
@@ -98,9 +111,12 @@ const CreateEvent = () => {
           />
         </div>
 
-        {/* Location */}
+        {/* Event Location */}
         <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="location">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="location"
+          >
             Event Location:
           </label>
           <input
@@ -113,24 +129,11 @@ const CreateEvent = () => {
           />
         </div>
 
-        {/*  URL */}
         <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="imageUrl">
-            Image URL:
-          </label>
-          <input
-            type="text"
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            className="input input-bordered input-accent w-full max-w-xs"
-            placeholder="Enter image URL"
-          />
-        </div>
-
-        {/* Description */}
-        <div className="mb-4">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="description">
+          <label
+            className="block text-white text-sm font-bold mb-2"
+            htmlFor="description"
+          >
             Description:
           </label>
           <textarea
@@ -142,23 +145,24 @@ const CreateEvent = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full btn btn-success"
-        >
+        <button type="submit" className="w-full btn btn-success">
           Submit
         </button>
       </form>
 
       {/* Event List */}
+      
       {events.length > 0 && (
-        <div className="mt-8 w-full max-w-md">
-          <h3 className="text-xl font-bold mb-4 text-center text-white">Created Events</h3>
+
+        <div className=" bg-gray-800 mt-8 w-full max-w-md" style={{ width: "100%", maxWidth: "400px" }}>
+          <h3 className="text-xl font-bold mb-4 text-center text-white">
+            Created Events
+          </h3>
           {events.map((event, index) => (
-            <div key={index} className="card bg-base-100 w-96 shadow-xl mb-4">
+            <div key={index} className="card bg-base-100 w-96 shadow-xl mb-4 m-auto">
               <div className="card-body">
-                <h2 className="card-title">{event.title}</h2>
-                <p>{event.description}</p>
+                <h2 className="card-title text-gray-50">{event.title}</h2>
+                <p className="text-gray-50">{event.description}</p>
               </div>
               {event.imageUrl && (
                 <figure>
@@ -166,16 +170,15 @@ const CreateEvent = () => {
                     src={event.imageUrl}
                     alt={event.title}
                     className="max-w-full"
-                  />
+                    />
                 </figure>
               )}
             </div>
           ))}
         </div>
       )}
-    </div>
+      </div>
   );
 };
 
 export default CreateEvent;
-

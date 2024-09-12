@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <div className="navbar bg-slate-300 flex-wrap">
+    <div className="navbar bg-gray-600 flex-wrap">
       <div className="flex-1">
         <a className="btn btn-ghost text-xl">Event-Scheduler</a>
       </div>
@@ -12,7 +12,7 @@ const Navbar = () => {
             <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/addEvent">Add Event</NavLink>
+            <NavLink to="/create-event">Add Event</NavLink>
           </li>
           <div
             tabIndex={0}
