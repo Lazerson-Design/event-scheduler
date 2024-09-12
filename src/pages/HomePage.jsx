@@ -4,6 +4,7 @@ import SignInPage from "./SignInPage";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
 import { EventContext } from "../context/EventContext";
+import EventCard from "../components/EventCard"; // Import EventCard component
 
 export default function HomePage() {
   const { isLoggedIn, onLogout } = useContext(AuthContext);
@@ -40,17 +41,18 @@ export default function HomePage() {
         <div>
           <Navbar />
           <div>
-            <h1>Events</h1>
-            {events.length > 0 ? (
-              events.map((event, index) => (
-                <div key={index}>
-                  <h2>{event.title}</h2>
-                  <p>{event.description}</p>
-                </div>
-              ))
-            ) : (
-              <p>No events available</p>
-            )}
+            {/* Display created events as cards */}
+            <div className="flex flex-wrap gap-4 justify-center">
+              {events.map((event, index) => (
+                <EventCard
+                  key={index}
+                  title={event.title}
+                  date={event.date}
+                  location={event.location}
+                  description={event.description}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}
