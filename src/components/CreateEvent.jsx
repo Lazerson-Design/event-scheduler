@@ -6,7 +6,6 @@ const CreateEvent = () => {
     title: "",
     date: "",
     location: "",
-    // imageUrl: "",
     description: "",
   });
 
@@ -14,9 +13,10 @@ const CreateEvent = () => {
   const [submitForm, setSubmitForm] = useState(false);
 
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
+    const userId = localStorage.getItem("userId"); // Retrieve user ID from localStorage
+
     const createEvent = async () => {
       try {
         const res = await fetch("http://localhost:3001/api/events", {
@@ -27,7 +27,7 @@ const CreateEvent = () => {
           },
           body: JSON.stringify({
             ...formData,
-            organizerId: 5 /*HIER LOGIK FÜR USER ID AUS LOCAL STORRAGE */,
+            organizerId: userId, // Use userId from localStorage
           }),
         });
 
@@ -44,7 +44,6 @@ const CreateEvent = () => {
           title: "",
           date: "",
           location: "",
-          // imageUrl: "",
           description: "",
         });
       } catch (error) {
@@ -56,7 +55,7 @@ const CreateEvent = () => {
       createEvent();
       setSubmitForm(false);
     }
-  }, [submitForm, formData, token, user]);
+  }, [submitForm, formData, token]); // dependencies
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -155,7 +154,7 @@ const CreateEvent = () => {
 
       {events.length > 0 && (
         <div
-          className=" bg-gray-800 mt-8 w-full max-w-md"
+          className="bg-gray-800 mt-8 w-full max-w-md"
           style={{ width: "100%", maxWidth: "400px" }}
         >
           <h3 className="text-xl font-bold mb-4 text-center text-white">
