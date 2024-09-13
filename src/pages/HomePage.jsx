@@ -32,7 +32,7 @@ export default function HomePage() {
       {!isLoggedIn ? (
         // If not logged in, prompt the user to log in or sign up
         <>
-          <p>Please sign up or log in to access the content.</p>
+          {/*<p>Please sign up or log in to access the content.</p>*/}
           {/* Render the SignUpPage component and pass the onLoginSuccess handler as a prop */}
           <SignUpPage onLoginSuccess={handleLoginSuccess} />
         </>
@@ -42,7 +42,7 @@ export default function HomePage() {
           <Navbar />
           <div>
             {/* Display created events as cards */}
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-wrap gap-4 justify-center py-4">
               {events.map((event, index) => (
                 <EventCard
                   key={index}
