@@ -1,10 +1,19 @@
-const EventCard = ({ title, date, location, description }) => {
+const EventCard = ({
+  title,
+  date,
+  location,
+  description,
+  selectedImageUrl,
+}) => {
+  // Fallback to local storage if selectedImageUrl is not passed in as a prop
+  const imageUrl = selectedImageUrl || localStorage.getItem("selectedImageUrl");
+
   return (
     <div className="card bg-base-100 w-96 shadow-xl">
       <figure>
         {/* Placeholder for the event image */}
         <img
-          src="https://imgs.search.brave.com/xaoKljT06qEeqGwafph0JWpyOiMnlQB0k8Aq153svDo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNTMw/Njg1Nzk3L3Bob3Rv/L2dyb3VwLW9mLWJ1/c2luZXNzLXBlb3Bs/ZS1zdGFuZGluZy1h/bmQtdGFsa2luZy1p/bi1vZmZpY2UuanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPU1v/UFZOQzBURTFyaDdC/VkV5UlJPTFpjbE1r/R2xkWEthamlMUlVP/WjhtZWM9"
+          src={imageUrl}
           alt="Event Image Placeholder"
           className="w-full h-48 object-cover"
         />
@@ -15,7 +24,7 @@ const EventCard = ({ title, date, location, description }) => {
 
         {/* Event date */}
         <p>
-          <strong>Date:</strong> {date}
+          <strong>Date:</strong> {new Date(date).toLocaleDateString("de-DE")}
         </p>
 
         {/* Event location */}
@@ -28,7 +37,7 @@ const EventCard = ({ title, date, location, description }) => {
 
         <div className="card-actions justify-end">
           {/* Placeholder for action buttons (could be 'Buy Now', 'More Info', etc.) */}
-          <button className="btn btn-success">Details</button>
+          <button className="btn btn-success text-white">Details</button>
         </div>
       </div>
     </div>
