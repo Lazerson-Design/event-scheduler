@@ -1,9 +1,11 @@
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { onLogout } = useContext(AuthContext);
+  const navigate = useNavigate(); // Call useNavigate inside the component
 
   return (
     <div className="navbar bg-base-100">
@@ -16,7 +18,7 @@ const Navbar = () => {
 
       <div className="flex-none">
         {/* Create Event Button */}
-        <NavLink to="/create-event" className="btn btn-success mx-4">
+        <NavLink to="/create-event" className="btn btn-success text-white mx-4">
           Add Event
         </NavLink>
 
@@ -54,7 +56,14 @@ const Navbar = () => {
             </li>
             {/* Logout link */}
             <li>
-              <a onClick={onLogout}>Logout</a>
+              <a
+                onClick={() => {
+                  onLogout();
+                  navigate("/"); // Navigate to homepage after logout
+                }}
+              >
+                Logout
+              </a>
             </li>
           </ul>
         </div>
