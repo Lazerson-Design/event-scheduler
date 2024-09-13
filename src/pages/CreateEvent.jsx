@@ -35,10 +35,10 @@ const CreateEvent = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   return (
-    <div className="flex items-center justify-center min-h-screen flex-col">
+    <div className="flex items-center justify-center py-4 flex-col">
       <form
         onSubmit={handleSubmit} // Form submission is handled here
-        className="bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        className="bg-gray-800 shadow-md flex flex-col rounded-xl px-8 pt-6 pb-8 mb-4"
         style={{ width: "100%", maxWidth: "400px" }}
       >
         <h2 className="text-2xl font-bold mb-4 text-center text-white">
@@ -47,70 +47,70 @@ const CreateEvent = () => {
 
         {/* Event Name */}
         <div className="mb-4">
-          <label
+          {/*  <label
             className="block text-white text-sm font-bold mb-2"
             htmlFor="title"
           >
             Event Name:
-          </label>
+          </label> */}
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange} // Update form data when user types
-            className="input input-bordered flex items-center gap-2 mt-4 w-full"
+            className="input input-bordered items-center w-full"
             placeholder="Enter event name"
           />
         </div>
 
         {/* Event Date */}
         <div className="mb-4">
-          <label
+          {/* <label
             className="block text-white text-sm font-bold mb-2"
             htmlFor="date"
           >
             Event Date:
-          </label>
+          </label> */}
           <input
             type="date"
             name="date"
             value={formData.date}
             onChange={handleChange} // Update form data when user types
-            className="input input-bordered items-center space-between gap-2 mt-4 w-full"
+            className="input input-bordered items-center w-full"
           />
         </div>
 
         {/* Event Location */}
         <div className="mb-4">
-          <label
+          {/* <label
             className="block text-white text-sm font-bold mb-2"
             htmlFor="location"
           >
             Event Location:
-          </label>
+          </label> */}
           <input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleChange} // Update form data when user types
-            className="input input-bordered flex items-center gap-2 mt-4 w-full"
+            className="input input-bordered items-center w-full"
             placeholder="Enter event location"
           />
         </div>
 
         {/* Event Description */}
         <div className="mb-4">
-          <label
+          {/* <label
             className="block text-white text-sm font-bold mb-2"
             htmlFor="description"
           >
             Description:
-          </label>
+          </label> */}
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange} // Update form data when user types
-            className="input input-bordered flex items-center gap-2 mt-4 w-full"
+            className="input input-bordered items-center py-2 w-full"
             placeholder="Enter event description"
           />
         </div>
@@ -122,6 +122,7 @@ const CreateEvent = () => {
       </form>
 
       {/* Display created events as cards */}
+      {/*
       <div className="flex flex-wrap gap-4 justify-center">
         {events.map((event, index) => (
           <EventCard
@@ -133,6 +134,7 @@ const CreateEvent = () => {
           />
         ))}
       </div>
+      */}
     </div>
   );
 };

@@ -1,16 +1,22 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
+import { AuthContext } from "./AuthContext";
 
 // Create the EventContext
 export const EventContext = createContext();
 
 export const EventProvider = ({ children }) => {
+  const { isLoggedIn } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
 
-  const token = localStorage.getItem("token");
+  /* const token = localStorage.getItem("token"); */
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
   const userId = localStorage.getItem("userId");
-
+  useEffect(() => {
+    if (isLoggedIn) setToken(localStorage.getItem("token"));
+  }, [isLoggedIn]);
   // Function to create a new event
   const createEvent = async (formData) => {
+    console.log(formData, userId, token);
     try {
       const res = await fetch("http://localhost:3001/api/events", {
         method: "POST",
@@ -30,14 +36,15 @@ export const EventProvider = ({ children }) => {
 
       const data = await res.json();
       // Ensure prevEvents is an array before updating it
-      setEvents((prevEvents) =>
+      /* setEvents((prevEvents) =>
         Array.isArray(prevEvents) ? [...prevEvents, data] : [data]
-      );
+      ); */
+      setEvents((prevEvents) => [...prevEvents, data]);
     } catch (error) {
       console.error("API request error:", error);
     }
   };
-
+  console.log(events);
   // Fetch events when the component mounts
   useEffect(() => {
     const fetchEvents = async () => {
