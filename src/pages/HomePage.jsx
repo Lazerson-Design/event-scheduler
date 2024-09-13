@@ -3,9 +3,12 @@ import SignUpPage from "./SignUpPage";
 import SignInPage from "./SignInPage";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
+import { EventContext } from "../context/EventContext";
+import EventCard from "../components/EventCard"; // Import EventCard component
 
 export default function HomePage() {
   const { isLoggedIn, onLogout } = useContext(AuthContext);
+  const { events } = useContext(EventContext);
 
   useEffect(() => {
     // When the component mounts or when isLoggedIn changes, we check if the modal should be shown
@@ -37,7 +40,20 @@ export default function HomePage() {
         // If logged in, show the homepage content and a log-out button
         <div>
           <Navbar />
-          <h1>Welcome to the HomePage!</h1>
+          <div>
+            {/* Display created events as cards */}
+            <div className="flex flex-wrap gap-4 justify-center">
+              {events.map((event, index) => (
+                <EventCard
+                  key={index}
+                  title={event.title}
+                  date={event.date}
+                  location={event.location}
+                  description={event.description}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -74,6 +74,7 @@ export default function SignInPage() {
 
       // Store the token in localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.user.id); // Store the user ID as well
 
       // Clear form after successful sign-in
       clearForm();
